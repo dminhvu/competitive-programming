@@ -9,6 +9,7 @@ import sys
 from collections import defaultdict
 
 input = sys.stdin.readline
+print = sys.stdout.write
 
 MOD = 998_244_353
 output = []
@@ -51,4 +52,4 @@ for _ in range(t):
 
     output.append(solve(n, cost, edges_uv))
 
-print(*output, sep="\n")
+print("\n".join(map(str, output)))
