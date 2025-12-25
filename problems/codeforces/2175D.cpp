@@ -54,7 +54,7 @@ void solve() {
     /* Solution goes here */
     /*
 
-NOTE: Incomplete solution, not AC yet
+TODO: Incomplete solution, not AC yet
 
 Restate the problem:
 
@@ -90,29 +90,49 @@ dp[1][7] = max(dp[1][7], dp[0][8] + mx[1][7]) = 1
 i=2: a[i] = 2
 if take 0: mx[2]
 
+
+
+---
+
+
+dp[i][j][l]
+
+l = sum of used cards so far
+j = max card used by a friend so far
+next friend should benefit if use > j card, call x
+dp[i + 1][x][l + x] = dp[i][j][l] + x, for x > j
+
     */
 
     int n, k;
     cin >> n >> k;
-    vi a(n + 1, 0);
-    rep(i, 1, n) cin >> a[i];
-    vector<vi> dp(n + 1, vi(361, 0));
-    vector<vi> mx(n + 1, vi(361, 0));
+    vector<int> a;
+    set<int> s;
     rep(i, 1, n) {
-        rep(j, 0, k) {
-            if (a[i] < j) {
-                mx[i][k - a[i]] = max(mx[i][k - a[i]], max(mx[i - 1][k], a[i]));
-                dp[i][k - a[i]] =
-                    max(dp[i][k - a[i]], dp[i - 1][k] + mx[i][k - a[i]]);
-            } else {
-                mx[i][k - j] = max(mx[i][k - j], max(mx[i - 1][k], j));
-                dp[i][k - j] = max(dp[i][k - j], dp[i - 1][k] + mx[i][k - j]);
+        int x;
+        cin >> x;
+        // cout << x << '\n';
+        if (s.empty() || s.find(x) == s.end()) {
+            a.pb(x);
+            s.insert(x);
+        }
+    }
+    n = a.size();
+    vector<vector<vi>> dp(n, vector<vi>(k + 1, vi(k + 1, 0)));
+    // vector<vi> mx(n, vi(k + 1, 0));
+    rep(i, 0, n - 2) {
+        rep(j, 0, min(k, a[i])) {
+            rep(l, j + 1, k - j) {
+                dp[i + 1][l][j + l] = max(dp[i + 1][l][j + l], dp[i][l][j] + l);
+            }
+            rep(l, 0, j) {
+                dp[i + 1][j][l] = max(dp[i + 1][j][l], dp[i][j][l] + j);
             }
         }
     }
 
     int ans = 0;
-    rep(i, 0, k) { ans = max(ans, dp[n][i]); }
+    rep(i, 0, k) rep(j, 0, k) ans = max(ans, dp[n - 1][i][j]);
 
     cout << ans << '\n';
 }
