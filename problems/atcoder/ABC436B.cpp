@@ -1,5 +1,5 @@
 /*
-    Task: AtCoder ABC346B
+    Task: AtCoder ABC436B
     Date: 26.12.2025
     Time: 17:32:42 CET
     Author: https://www.linkedin.com/in/dminhvu02
