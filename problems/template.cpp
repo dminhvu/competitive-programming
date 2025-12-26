@@ -41,10 +41,21 @@ void fastIO() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+
+#ifdef LOCAL
+    if (!freopen("input.txt", "r", stdin)) {
+        cerr << "Warning: Could not open input.txt" << endl;
+    }
+    if (!freopen("output.txt", "w", stdout)) {
+        cerr << "Warning: Could not open output.txt for writing" << endl;
+    }
+#endif
 }
 
 void solve() {
-    /* Solution goes here */
+    /*
+        Solution goes here
+    */
 }
 
 int main() {
