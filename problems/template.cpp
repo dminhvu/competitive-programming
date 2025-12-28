@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <cstring>
 #include <deque>
@@ -32,8 +33,10 @@ using vpii = vector<pii>;
 #define rep(i, a, b) for (int i = (a); i <= (b); ++i)
 #define per(i, a, b) for (int i = (b); i >= (a); --i)
 
-const int INF = 1e9 + 7;
-const ll LINF = 1e18 + 7;
+const int INF = INT_MAX;
+const int NINF = INT_MIN;
+const ll LINF = LLONG_MAX;
+const ll NLINF = LLONG_MIN;
 const ld EPS = 1e-9;
 const int MOD = 998244353;
 
