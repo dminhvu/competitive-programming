@@ -53,9 +53,8 @@ void setup() {
 }
 
 void solve() {
-    /*
-        Solution goes here
-    */
+    /* SOLUTION GOES HERE */
+    /* ================== */
 }
 
 int main() {
