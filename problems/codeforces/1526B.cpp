@@ -49,7 +49,7 @@ const ld EPS = 1e-9;
 const int MOD = 998244353;
 
 // Fast I/O
-void fastIO() {
+void setup() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -78,7 +78,7 @@ void solve() {
 }
 
 int main() {
-    fastIO();
+    setup();
 
     int t = 1;
     cin >> t;  // Comment out if single test case

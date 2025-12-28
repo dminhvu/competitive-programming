@@ -44,7 +44,7 @@ const ll LINF = 1e18 + 7;
 const ld EPS = 1e-9;
 const int MOD = 998244353;
 
-void fastIO() {
+void setup() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -63,7 +63,7 @@ void solve() {
 }
 
 int main() {
-    fastIO();
+    setup();
 
     int t = 1;
     cin >> t;

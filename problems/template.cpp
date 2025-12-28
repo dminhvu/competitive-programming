@@ -1,16 +1,4 @@
-#include <algorithm>
-#include <climits>
-#include <cmath>
-#include <cstring>
-#include <deque>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <set>
-#include <stack>
-#include <string>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 using ll = long long;
@@ -40,7 +28,7 @@ const ll NLINF = LLONG_MIN;
 const ld EPS = 1e-9;
 const int MOD = 998244353;
 
-void fastIO() {
+void setup() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -62,7 +50,7 @@ void solve() {
 }
 
 int main() {
-    fastIO();
+    setup();
 
     int t = 1;
     cin >> t;

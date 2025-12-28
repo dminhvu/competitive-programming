@@ -44,7 +44,7 @@ const ll LINF = 1e18 + 7;
 const ld EPS = 1e-9;
 const int MOD = 998244353;
 
-void fastIO() {
+void setup() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -63,7 +63,6 @@ void solve() {
     /*
         Solution goes here
 
-TODO: Rethink
 Given the array a[i]
 In one op:
 - Choose a[0], add a[0] to X, remove a[0]
@@ -162,6 +161,13 @@ dp[i][2] =
 - dp[i - 1][2] - a[i]
 - dp[i - 2][1] - a[i - 1] - a[i]
 
+
+--------
+
+Fix one unchosen child -> what is the optimal sum of the remaining children
+- Obs: all children from the right of the unchosen will contribute -a[i] to X
+- Obs: all children from the first children to the unchosen will contribute
+abs(a[i]) to X unless the unchosen one is the first one
     */
     int n;
     cin >> n;
@@ -169,60 +175,26 @@ dp[i][2] =
     rep(i, 0, n - 1) cin >> a[i];
     ll suff[n + 1];
     suff[n] = 0;
-    per(i, 0, n - 1) { suff[i] = suff[i + 1] + a[i]; }
+    per(i, 0, n - 1) { suff[i] = suff[i + 1] - a[i]; }
 
-    ll dp[n][3];
-    memset(dp, -LINF, sizeof(dp));
-
-    dp[0][1] = a[0];
-    dp[0][2] = -LINF;
-    dp[1][1] = a[0] + a[1];
-    dp[1][2] = max(a[0] - a[1], -a[1]);
-
-    // dp[0][0] = a[0];
-    // dp[1][0] = max(a[0], -a[1]);
-
-    rep(i, 2, n - 1) {
-        // dp[i][0] = max(dp[i][0], dp[i - 1][0] + a[i]);
-        // dp[i][0] = max(dp[i][0], dp[i - 1][0] - a[i]);
-        // if (i - 2 >= 0) {
-        //     dp[i][0] = max(dp[i][0], dp[i - 2][0] - a[i - 1] + a[i]);
-        //     dp[i][0] = max(dp[i][0], dp[i - 2][0] - a[i - 1] - a[i]);
-        // }
-
-        dp[i][1] = max(dp[i][1], dp[i - 1][1] + a[i]);
-        dp[i][2] = max(dp[i][2], dp[i - 1][2] - a[i]);
-        // dp[i][1] = max(dp[i][1], dp[i - 1][2] + a[i - 2] + a[i]);
-        dp[i][1] = max(dp[i][1], dp[i - 2][1] - a[i - 1] + a[i]);
-        dp[i][2] = max(dp[i][2], dp[i - 2][1] - a[i - 1] - a[i]);
-    }
-
-    rep(i, 1, n - 1) {
-        rep(j, 1, 2) cout << dp[i - 1][j] << " ";
-        cout << suff[i + 1];
-        cout << '\n';
-    }
+    ll pref[n];
+    pref[0] = a[0];
+    rep(i, 1, n - 1) { pref[i] = pref[i - 1] + abs(a[i]); }
 
     ll ans = -LINF;
     rep(i, 0, n - 1) {
-        ll total = 0;
+        ll sum = suff[i + 1];
         if (i > 0) {
-            // cout << dp[i - 1][1] << " " << dp[i - 1][2] << '\n';
-            total += max(dp[i - 1][1], dp[i - 1][2]);
-            // total += dp[i - 1][0];
+            sum += pref[i - 1];
         }
-        if (i + 1 < n) {
-            total -= suff[i + 1];
-        }
-
-        ans = max(ans, total);
+        ans = max(ans, sum);
     }
 
     cout << ans << '\n';
 }
 
 int main() {
-    fastIO();
+    setup();
 
     int t = 1;
     cin >> t;
