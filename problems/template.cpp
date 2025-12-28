@@ -1,6 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#ifdef LOCAL
+#define debug(x) cerr << #x << " = " << (x) << endl
+#define debug2(x, y) \
+    cerr << #x << " = " << (x) << ", " << #y << " = " << (y) << endl
+#else
+#define debug(x)
+#define debug2(x, y)
+#endif
+
 using ll = long long;
 using ull = unsigned long long;
 using ld = long double;
