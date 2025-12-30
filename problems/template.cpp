@@ -49,6 +49,24 @@ const ll NLINF = LLONG_MIN;
 const ld EPS = 1e-9;
 const int MOD = 998244353;
 
+template <typename T>
+bool chmax(T& a, const T& b) {
+    if (a < b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+bool chmin(T& a, const T& b) {
+    if (a > b) {
+        a = b;
+        return true;
+    }
+    return false;
+}
+
 void setup() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
