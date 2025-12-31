@@ -1,7 +1,7 @@
 /*
-    Task: CSES 1624
+    Task: CSES 3217
     Date: 31.12.2025
-    Time: 15:29:40 CET
+    Time: 17:06:05 CET
     Author: https://www.linkedin.com/in/dminhvu02
 */
 
@@ -90,35 +90,52 @@ void setup() {
 #endif
 }
 
-char s[8][8];
-bool col[8], diag1[15], diag2[15];
-int ans = 0;
-
-void backtrack(int row) {
-    if (row == 8) {
-        ans++;
-        return;
-    }
-
-    rep(i, 0, 7) {
-        if (s[row][i] == '.' && !col[i] && !diag1[row + i] &&
-            !diag2[row - i + 8 - 1]) {
-            col[i] = diag1[row + i] = diag2[row - i + 8 - 1] = true;
-            backtrack(row + 1);
-            col[i] = diag1[row + i] = diag2[row - i + 8 - 1] = false;
-        }
-    }
-}
-
 void solve() {
     /* SOLUTION GOES HERE */
     /* ================== */
-    rep(i, 0, 7) {
-        rep(j, 0, 7) { cin >> s[i][j]; }
-    }
+    /*
 
-    backtrack(0);
-    cout << ans << '\n';
+Standing at x, y:
+- (x - 2, y + 1)
+- (x - 1, y + 2)
+- (x + 1, y + 2)
+- (x + 2, y + 1)
+- (x + 2, y - 1)
+- (x + 1, y - 2)
+- (x - 1, y - 2)
+- (x - 2, y - 1)
+
+    */
+    int n;
+    cin >> n;
+    int dx[8] = {-2, -1, 1, 2, 2, 1, -1, -2};
+    int dy[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+
+    int dist[n][n];
+    memset(dist, -1, sizeof(dist));
+    dist[0][0] = 0;
+    queue<pii> q;
+    q.push(mp(0, 0));
+
+    while (q.size()) {
+        pii cur = q.front();
+        q.pop();
+        rep(i, 0, 7) {
+            pii nxt = mp(cur.fi + dx[i], cur.se + dy[i]);
+
+            if (nxt.fi < 0 || nxt.fi >= n || nxt.se < 0 || nxt.se >= n) {
+                continue;
+            }
+            if (dist[nxt.fi][nxt.se] == -1) {
+                dist[nxt.fi][nxt.se] = dist[cur.fi][cur.se] + 1;
+                q.push(nxt);
+            }
+        }
+    }
+    rep(i, 0, n - 1) {
+        rep(j, 0, n - 1) { cout << dist[i][j] << " "; }
+        cout << '\n';
+    }
 }
 
 int main() {

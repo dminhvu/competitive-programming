@@ -1,7 +1,7 @@
 /*
-    Task: CSES 1624
+    Task: CSES 3399
     Date: 31.12.2025
-    Time: 15:29:40 CET
+    Time: 15:55:54 CET
     Author: https://www.linkedin.com/in/dminhvu02
 */
 
@@ -90,42 +90,56 @@ void setup() {
 #endif
 }
 
-char s[8][8];
-bool col[8], diag1[15], diag2[15];
-int ans = 0;
-
-void backtrack(int row) {
-    if (row == 8) {
-        ans++;
-        return;
-    }
-
-    rep(i, 0, 7) {
-        if (s[row][i] == '.' && !col[i] && !diag1[row + i] &&
-            !diag2[row - i + 8 - 1]) {
-            col[i] = diag1[row + i] = diag2[row - i + 8 - 1] = true;
-            backtrack(row + 1);
-            col[i] = diag1[row + i] = diag2[row - i + 8 - 1] = false;
-        }
-    }
-}
-
 void solve() {
     /* SOLUTION GOES HERE */
     /* ================== */
-    rep(i, 0, 7) {
-        rep(j, 0, 7) { cin >> s[i][j]; }
-    }
+    /*
+TODO: Not AC yet
+2 3 4
+2 3 4
 
-    backtrack(0);
-    cout << ans << '\n';
+4 3 2
+2 4 3
+    */
+    int n, a, b;
+    cin >> n >> a >> b;
+    if (a + b > n) {
+        cout << "NO" << '\n';
+    } else {
+        int countEqual = n - (a + b);
+
+        if (n - countEqual > 0 && (a == 0 || b == 0)) {
+            cout << "NO" << '\n';
+        } else {
+            cout << "YES" << '\n';
+            vi v1, v2;
+            rep(i, 1, countEqual) v1.pb(i), v2.pb(i);
+            int x = countEqual + 1;
+            int y = n;
+            rep(i, 1, a) {
+                v1.pb(y);
+                v2.pb(x);
+                x++;
+                y--;
+            }
+            rep(i, 1, b) {
+                v1.pb(y);
+                v2.pb(y + 1);
+                y--;
+            }
+            for (auto x : v1) cout << x << " ";
+            cout << '\n';
+            for (auto x : v2) cout << x << " ";
+            cout << '\n';
+        }
+    }
 }
 
 int main() {
     setup();
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
 
     while (t--) {
         solve();
