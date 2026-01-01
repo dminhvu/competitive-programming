@@ -48,7 +48,7 @@ const int NINF = INT_MIN;
 const ll LINF = LLONG_MAX;
 const ll NLINF = LLONG_MIN;
 const ld EPS = 1e-9;
-const int MOD = 998244353;
+const ll MOD = 998244353;
 
 template <typename T>
 bool chmax(T& a, const T& b) {
@@ -66,6 +66,17 @@ bool chmin(T& a, const T& b) {
         return true;
     }
     return false;
+}
+
+ll binpow(ll a, ll b, ll mod = LINF) {
+    ll res = 1;
+    a %= mod;
+    while (b > 0) {
+        if (b & 1) res = res * a % mod;
+        a = a * a % mod;
+        b >>= 1;
+    }
+    return res;
 }
 
 void setup() {
