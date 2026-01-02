@@ -1,7 +1,7 @@
 /*
-    Task: Codeforces 1324D
+    Task: Codeforces 1374D
     Date: 02.01.2026
-    Time: 22:56:11 CET
+    Time: 23:10:16 CET
     Author: https://www.linkedin.com/in/dminhvu02
 */
 
@@ -102,47 +102,38 @@ void setup() {
 void solve() {
     /* SOLUTION GOES HERE */
     /* ================== */
-    /*
-
-a[i] + a[j] > b[i] + b[j]
-
-a[i] - b[i] > -(a[j] - b[j])
-
-4 8 2 6 2
-4 5 4 1 3
-
-2 2 4 8 6
-4 3 4 5 1
--2 -1 0 3 5
-
-    */
-    int n;
-    cin >> n;
-    pii a[n];
-    rep(i, 0, n - 1) cin >> a[i].fi;
-    rep(i, 0, n - 1) cin >> a[i].se;
-
-    sort(a, a + n, [&](pii a, pii b) { return a.fi - a.se < b.fi - b.se; });
-
-    int j = n;
-    ll ans = 0;
+    int n, k;
+    cin >> n >> k;
+    ll a[n];
+    rep(i, 0, n - 1) cin >> a[i];
+    unordered_map<int, int> um;
     rep(i, 0, n - 1) {
-        j = max(j, i + 1);
-        while (j - 1 > i && a[i].fi - a[i].se > -(a[j - 1].fi - a[j - 1].se)) {
-            --j;
+        if (a[i] % k == 0) {
+            continue;
         }
-        debug2(i, j);
-        ans += 1ll * (n - j);
+        um[k - (a[i] % k)]++;
     }
 
-    cout << ans << '\n';
+    vpii v;
+
+    for (auto d : um) {
+        v.pb(mp(d.se, d.fi));
+    }
+
+    sort(rall(v));
+
+    if (v.empty()) {
+        cout << 0 << '\n';
+    } else {
+        cout << 1ll * (v[0].se + 1) + 1ll * (v[0].fi - 1) * k << '\n';
+    }
 }
 
 int main() {
     setup();
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
 
     while (t--) {
         solve();
