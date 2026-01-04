@@ -32,10 +32,10 @@ using vi = vector<int>;
 using vll = vector<ll>;
 using vpii = vector<pii>;
 
-#define pb push_back
-#define mp make_pair
-#define fi first
-#define se second
+#define PB push_back
+#define MP make_pair
+#define F first
+#define S second
 #define all(x) (x).begin(), (x).end()
 #define rall(x) (x).rbegin(), (x).rend()
 #define sz(x) (int)(x).size()
