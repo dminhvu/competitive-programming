@@ -112,17 +112,7 @@ key takeaway:
     ll a[n];
     rep(i, 0, n - 1) cin >> a[i];
 
-    if (n == 3) {
-        if (a[0] + a[1] > a[2] && a[1] + a[2] > a[0] && a[2] + a[0] > a[1] &&
-            (a[0] == a[1] || a[1] == a[2] || a[2] == a[0])) {
-            cout << a[0] + a[1] + a[2] << '\n';
-        } else {
-            cout << 0 << '\n';
-        }
-        return;
-    }
-
-    unordered_map<int, int> um;
+    map<int, int> um;
     rep(i, 0, n - 1) um[a[i]]++;
 
     vpii v;
@@ -130,38 +120,44 @@ key takeaway:
         v.pb(mp(d.fi, d.se));
     }
 
-    sort(rall(v));
-
     ll base = 0;
-    vll odd;
+    vll odd, even;
     for (auto d : v) {
         int k = d.se / 2;
         base += 1ll * k * d.fi;
 
         if (d.se & 1) {
             odd.pb(d.fi);
+        } else {
+            even.pb(d.fi);
         }
     }
+
+    sort(all(odd));
 
     if (base == 0) {
         cout << 0 << '\n';
     } else {
         ll ans = 0;
+
+        // case 1: 0 stick on symmetrical line
+        for (auto x : even) {
+            if (base - x > 0) {
+                chmax(ans, 2ll * base);
+            }
+        }
+
+        // case 2: 1 stick on symmetrical line
         for (auto x : odd) {
             if (2ll * base > x) {
                 chmax(ans, 2ll * base + x);
             }
         }
 
+        // case 3: 2 sticks on symmetrical line
         rep(i, 0, sz(odd) - 2) {
-            if (2ll * base + odd[i + 1] > odd[i]) {
+            if (2ll * base + odd[i] > odd[i + 1]) {
                 chmax(ans, 2ll * base + odd[i] + odd[i + 1]);
-            }
-        }
-
-        for (auto d : v) {
-            if (d.se >= 2 && base - d.fi > 0) {
-                chmax(ans, 2ll * base);
             }
         }
 
