@@ -1,4 +1,7 @@
 """
+Segment Tree for Range Max Query (RMQ) and Point Updates
+Supports: O(log n) query, O(log n) update, O(n) build
+
 References:
 1. https://vnoi.info/wiki/algo/data-structures/segment-tree-extend.md
 2. https://cp-algorithms.com/data_structures/segment_tree.html
@@ -6,78 +9,112 @@ References:
 
 
 class SegmentTree:
-    def __init__(self, nums):
-        self.num_of_elements = len(nums)
-        self.tree = [0 for _ in range(4 * self.num_of_elements)]
-        self.nums = nums
+    """Segment Tree for range maximum queries with point updates."""
 
-        # call to build tree
-        self.build_tree(0, 0, self.num_of_elements - 1)
+    def __init__(self, arr):
+        self.n = len(arr)
+        self.tree = [0] * (4 * self.n)
+        if arr:
+            self._build(arr, 0, 0, self.n - 1)
 
-    def build_tree(self, key, left, right):
-        """
-        This function intializes the tree with the given nums array.
-        """
-        # if left > right, this node does not exist
-        if left > right:
-            return
-        # if left == right, this node has only 1 element
-        if left == right:
-            self.tree[key] = self.nums[left]
-            return
-        # divide into 2 parts, left tree and right tree with the boundary is mid
-        mid = (left + right) // 2
-        self.build_tree(key * 2 + 1, left, mid)
-        self.build_tree(key * 2 + 2, mid + 1, right)
-        # tree[key] will store the maximum element of its left and right branch
-        # i.e. tree[key*2+1] and tree[key*2+2]
-        self.tree[key] = max(self.tree[key * 2 + 1], self.tree[key * 2 + 2])
+    def _build(self, arr, v, tl, tr):
+        """Build tree from array. v=node, tl/tr=range [tl, tr]"""
+        if tl == tr:
+            self.tree[v] = arr[tl]
+        else:
+            tm = (tl + tr) >> 1
+            self._build(arr, v * 2 + 1, tl, tm)
+            self._build(arr, v * 2 + 2, tm + 1, tr)
+            self.tree[v] = max(self.tree[v * 2 + 1], self.tree[v * 2 + 2])
 
-    def get_max(self, key, left, right, lower_bound, upper_bound):
-        """
-        This function gets max element in range [lower_bound - upper_bound].
-        Notes: left < right, lower_bound < upper_bound
-        """
-        # if left > upper bound, this node does not exist
-        # [[lower_bound - upper_bound] - [left - right]]
-        # if right < lower_bound, this node does not exist
-        # [[left - right] - [lower_bound - upper_bound]]
-        # then return 0
-        if left > upper_bound or right < lower_bound:
-            return 0
-        # if left >= lower_bound and right <= upper_bound
-        # [left - right] is entirely in [lower_bound - upper_bound]
-        # [lower_bound - [left - right] - upper_bound]
-        # then return the whole tree of this node
-        if left >= lower_bound and right <= upper_bound:
-            return self.tree[key]
-        # get max element from left tree and right tree
-        mid = (left + right) // 2
-        max_from_left_tree = self.get_max(
-            key * 2 + 1, left, mid, lower_bound, upper_bound
+    def _query(self, v, tl, tr, l, r):
+        """Query max in range [l, r]"""
+        if l > r:
+            return -float("inf")
+        if l == tl and r == tr:
+            return self.tree[v]
+        tm = (tl + tr) >> 1
+        return max(
+            self._query(v * 2 + 1, tl, tm, l, min(r, tm)),
+            self._query(v * 2 + 2, tm + 1, tr, max(l, tm + 1), r),
         )
-        max_from_right_tree = self.get_max(
-            key * 2 + 2, mid + 1, right, lower_bound, upper_bound
-        )
-        return max(max_from_left_tree, max_from_right_tree)
 
-    def query(self, lower_bound, upper_bound):
-        """
-        This function returns the answers for the queries by calling get_max().
-        """
-        answer = self.get_max(0, 0, self.num_of_elements, lower_bound, upper_bound)
-        return answer
+    def _update(self, v, tl, tr, pos, val):
+        """Update position pos to value val"""
+        if tl == tr:
+            self.tree[v] = val
+        else:
+            tm = (tl + tr) >> 1
+            if pos <= tm:
+                self._update(v * 2 + 1, tl, tm, pos, val)
+            else:
+                self._update(v * 2 + 2, tm + 1, tr, pos, val)
+            self.tree[v] = max(self.tree[v * 2 + 1], self.tree[v * 2 + 2])
+
+    def query(self, l, r):
+        """Query maximum in range [l, r] (0-indexed)"""
+        return self._query(0, 0, self.n - 1, l, r)
+
+    def update(self, pos, val):
+        """Update position pos to value val (0-indexed)"""
+        self._update(0, 0, self.n - 1, pos, val)
+
+
+# ===== Alternative: Compact inline version for contests =====
+def seg_tree_compact(arr):
+    """Ultra-compact segment tree (copy-paste friendly)"""
+    n = len(arr)
+    t = [0] * (4 * n)
+
+    def build(v, tl, tr):
+        if tl == tr:
+            t[v] = arr[tl]
+        else:
+            tm = (tl + tr) >> 1
+            build(v * 2 + 1, tl, tm)
+            build(v * 2 + 2, tm + 1, tr)
+            t[v] = max(t[v * 2 + 1], t[v * 2 + 2])
+
+    def query(v, tl, tr, l, r):
+        if l > r:
+            return -float("inf")
+        if l == tl and r == tr:
+            return t[v]
+        tm = (tl + tr) >> 1
+        return max(
+            query(v * 2 + 1, tl, tm, l, min(r, tm)),
+            query(v * 2 + 2, tm + 1, tr, max(l, tm + 1), r),
+        )
+
+    def update(v, tl, tr, pos, val):
+        if tl == tr:
+            t[v] = val
+        else:
+            tm = (tl + tr) >> 1
+            update(v * 2 + 1, tl, tm, pos, val) if pos <= tm else update(
+                v * 2 + 2, tm + 1, tr, pos, val
+            )
+            t[v] = max(t[v * 2 + 1], t[v * 2 + 2])
+
+    build(0, 0, n - 1)
+    return lambda l, r: query(0, 0, n - 1, l, r), lambda pos, val: update(
+        0, 0, n - 1, pos, val
+    )
 
 
 if __name__ == "__main__":
-    num_of_elements, num_of_queries = map(int, input().split())
-    nums = list(map(int, input().split()))
+    # Example usage
+    n, q = map(int, input().split())
+    arr = list(map(int, input().split()))
 
-    segment_tree = SegmentTree(nums)
+    st = SegmentTree(arr)
 
-    for query in range(num_of_queries):
-        lower_bound, upper_bound = map(int, input().split())
-        answer = segment_tree.query(lower_bound, upper_bound)
-        print(
-            f"Query {query}: Max element in range [{lower_bound} - {upper_bound}] is {answer}"
-        )
+    for i in range(q):
+        query_type = input().split()
+        if query_type[0] == "q":  # query
+            l, r = int(query_type[1]), int(query_type[2])
+            print(f"Max in [{l}, {r}]: {st.query(l, r)}")
+        else:  # update
+            pos, val = int(query_type[1]), int(query_type[2])
+            st.update(pos, val)
+            print(f"Updated position {pos} to {val}")
